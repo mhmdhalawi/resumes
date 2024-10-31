@@ -1,0 +1,14 @@
+model Experience {
+    id          Int      @id @default(autoincrement())
+    company     String
+    position    String
+    startYear   Int
+    endYear     Int
+    description String
+    resume      Resume   @relation(fields: [resumeId], references: [id])
+    resumeId    Int
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    @@map("experiences")
+}
