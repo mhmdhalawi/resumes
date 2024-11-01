@@ -1,12 +1,13 @@
 model User {
-    id       String @id @default(uuid())
-    email    String @unique
-    name     String
-    password String
-    role     Role   @default(USER)
-    status   Status @default(INACTIVE)
-
-    resume Resume[]
+    id           String         @id @default(uuid())
+    email        String         @unique
+    name         String
+    password     String
+    created_at   DateTime       @default(now())
+    role         Role           @default(USER)
+    status       Status         @default(INACTIVE)
+    resume       Resume[]
+    ActivityLogs ActivityLogs[]
 
     @@map("users")
 }
