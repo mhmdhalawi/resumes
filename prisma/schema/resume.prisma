@@ -1,13 +1,13 @@
 model Resume {
-    id          String         @id @default(uuid()) @db.Uuid
-    user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId      String         @db.Uuid
-    created_at  DateTime       @default(now())
-    updated_at  DateTime       @updatedAt
-    Education   Education[]
-    Work        Experience[]
-    Skill       Skill[]
-    resume_logs ActivityLogs[] @relation("resume_log")
+    id               String         @id @default(uuid()) @db.Uuid
+    user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId           String         @db.Uuid
+    created_at       DateTime       @default(now())
+    updated_at       DateTime       @updatedAt
+    educations       Education[]
+    experiences      Experience[]
+    skills           Skill[]
+    affected_resumes ActivityLogs[] @relation("resume")
 
     @@map("resumes")
 }

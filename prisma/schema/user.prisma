@@ -1,14 +1,14 @@
 model User {
-    id                 String         @id @default(uuid()) @db.Uuid
-    email              String         @unique
-    name               String
-    password           String
-    created_at         DateTime       @default(now())
-    role               Role           @default(USER)
-    status             Status         @default(INACTIVE)
-    resume             Resume[]
-    admin_logs         ActivityLogs[]
-    affected_user_logs ActivityLogs[] @relation("user_log")
+    id             String         @id @default(uuid()) @db.Uuid
+    email          String         @unique
+    name           String
+    password       String
+    created_at     DateTime       @default(now())
+    role           Role           @default(USER)
+    status         Status         @default(INACTIVE)
+    resumes        Resume[]
+    admin_logs     ActivityLogs[] @relation("admin")
+    affected_users ActivityLogs[] @relation("user")
 
     @@map("users")
 }
