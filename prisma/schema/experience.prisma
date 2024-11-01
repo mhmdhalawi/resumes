@@ -5,8 +5,8 @@ model Experience {
     startYear   Int
     endYear     Int
     description String
-    resume      Resume   @relation(fields: [resumeId], references: [id])
-    resumeId    Int
+    resume      Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+    resumeId    String   @db.Uuid
     created_at  DateTime @default(now())
     updated_at  DateTime @updatedAt
 

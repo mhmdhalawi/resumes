@@ -1,13 +1,15 @@
 model ActivityLogs {
-    id              Int      @id @default(autoincrement())
-    admin           User     @relation(fields: [adminId], references: [id])
-    adminId         String
+    admin           User     @relation(fields: [adminId], references: [id], onDelete: Cascade, map: "admin")
+    adminId         String   @db.Uuid
     action          Action
     affected_entity Entity
-    entity_id       String
+    user            User?    @relation("user_log", fields: [affected_id], references: [id], onDelete: Cascade, map: "user")
+    resume          Resume?  @relation("resume_log", fields: [affected_id], references: [id], onDelete: Cascade, map: "resume")
+    affected_id     String   @db.Uuid
     created_at      DateTime @default(now())
 
-    @@map("activitylogs")
+    @@id([adminId, affected_id])
+    @@map("activity_logs")
 }
 
 enum Action {
