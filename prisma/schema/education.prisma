@@ -5,7 +5,6 @@ model Education {
     fieldOfStudy String
     startYear    Int
     endYear      Int
-    description  String
     resume       Resume   @relation(fields: [resumeId], references: [id])
     resumeId     Int
     created_at   DateTime @default(now())

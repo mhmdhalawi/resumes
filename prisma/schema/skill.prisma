@@ -1,7 +1,7 @@
 model Skill {
     id         Int      @id @default(autoincrement())
     name       String
-    level      Int
+    level      Int?
     resume     Resume   @relation(fields: [resumeId], references: [id])
     resumeId   Int
     created_at DateTime @default(now())

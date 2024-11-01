@@ -1,16 +1,14 @@
 model Resume {
-    id Int @id @default(autoincrement())
-
-    user       User     @relation(fields: [userId], references: [id])
+    id         Int          @id @default(autoincrement())
+    user       User         @relation(fields: [userId], references: [id])
     userId     String
     // @unique is used to ensure that each user has only one resume
     // userId      String   @unique
-    created_at DateTime @default(now())
-    updated_at DateTime @updatedAt
-
-    Education Education[]
-    Work      Experience[]
-    Skill     Skill[]
+    created_at DateTime     @default(now())
+    updated_at DateTime     @updatedAt
+    Education  Education[]
+    Work       Experience[]
+    Skill      Skill[]
 
     @@map("resumes")
 }
