@@ -28,6 +28,10 @@ export class AdminGuard implements CanActivate {
       },
     });
 
+    if (foundUser.status !== 'ACTIVE') {
+      throw new UnauthorizedException('Unauthorized');
+    }
+
     if (foundUser.role !== 'ADMIN') {
       throw new UnauthorizedException('Unauthorized');
     }
