@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { IS_PUBLIC_KEY } from 'src/decorators/public';
@@ -26,7 +31,7 @@ export class AuthGuard implements CanActivate {
 
     // Check if user is not authenticated
     if (!user) {
-      return false;
+      throw new UnauthorizedException('Unauthorized');
     }
 
     // check if user is inactive or suspended
@@ -40,7 +45,7 @@ export class AuthGuard implements CanActivate {
     });
 
     if (foundUser.status !== 'ACTIVE') {
-      return false;
+      throw new UnauthorizedException('Unauthorized');
     }
 
     // User is authenticated
