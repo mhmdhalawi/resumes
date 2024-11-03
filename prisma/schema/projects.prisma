@@ -1,0 +1,11 @@
+model Projects {
+    id          String   @id @default(uuid()) @db.Uuid
+    name        String
+    description String
+    resume      Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+    resumeId    String   @db.Uuid
+    created_at  DateTime @default(now())
+    updated_at  DateTime @updatedAt
+
+    @@map("projects")
+}
