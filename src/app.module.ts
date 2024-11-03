@@ -8,7 +8,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ResumeModule } from './modules/resume/resume.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './modules/auth/guard/auth.guard';
+import { AuthGuard } from './modules/auth/guards/auth.guard';
 
 @Module({
   imports: [

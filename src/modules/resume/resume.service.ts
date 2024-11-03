@@ -1,26 +1,54 @@
 import { Injectable } from '@nestjs/common';
 import { CreateResumeDto } from './dto/create-resume.dto';
 import { UpdateResumeDto } from './dto/update-resume.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class ResumeService {
-  create(createResumeDto: CreateResumeDto) {
+  constructor(private prismaService: PrismaService) {}
+  async create(createResumeDto: CreateResumeDto) {
+    console.log(createResumeDto);
     return 'This action adds a new resume';
   }
 
-  findAll() {
-    return `This action returns all resume`;
+  async findAll(userId: string) {
+    return await this.prismaService.resume.findMany({
+      where: {
+        userId,
+      },
+      include: {
+        educations: true,
+        experiences: true,
+        skills: true,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} resume`;
+  async findOne(userId: string, id: string) {
+    return await this.prismaService.resume.findUnique({
+      where: {
+        id,
+        userId,
+      },
+      include: {
+        educations: true,
+        experiences: true,
+        skills: true,
+      },
+    });
   }
 
   update(id: number, updateResumeDto: UpdateResumeDto) {
+    console.log(updateResumeDto);
     return `This action updates a #${id} resume`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} resume`;
+  async remove(userId: string, id: string) {
+    await this.prismaService.resume.delete({
+      where: {
+        id,
+        userId,
+      },
+    });
   }
 }

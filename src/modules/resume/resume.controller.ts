@@ -6,10 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  Session,
 } from '@nestjs/common';
 import { ResumeService } from './resume.service';
 import { CreateResumeDto } from './dto/create-resume.dto';
 import { UpdateResumeDto } from './dto/update-resume.dto';
+import { SessionUser } from '../auth/types/session';
+import { UUIDPipe } from 'src/pipes/uuid.pipe';
 
 @Controller('resume')
 export class ResumeController {
@@ -21,22 +24,33 @@ export class ResumeController {
   }
 
   @Get()
-  findAll() {
-    return this.resumeService.findAll();
+  findAll(@Session() session: SessionUser) {
+    return this.resumeService.findAll(session.user.id);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.resumeService.findOne(+id);
+  findOne(
+    @Param('id', UUIDPipe)
+    id: string,
+    @Session() session: SessionUser,
+  ) {
+    return this.resumeService.findOne(session.user.id, id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateResumeDto: UpdateResumeDto) {
+  update(
+    @Param('id', UUIDPipe) id: string,
+    @Body() updateResumeDto: UpdateResumeDto,
+  ) {
     return this.resumeService.update(+id, updateResumeDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.resumeService.remove(+id);
+  async remove(
+    @Param('id', UUIDPipe) id: string,
+    @Session() session: SessionUser,
+  ) {
+    await this.resumeService.remove(session.user.id, id);
+    return { message: 'Resume deleted successfully' };
   }
 }
