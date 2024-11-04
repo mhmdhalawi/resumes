@@ -5,9 +5,17 @@ import { PrismaService } from '../prisma/prisma.service';
 export class AdminService {
   constructor(private prismaService: PrismaService) {}
 
-  async getUsers() {
+  async getUsers(q?: string) {
     // Get all users
-    return await this.prismaService.user.findMany();
+    return await this.prismaService.user.findMany({
+      where: {
+        // Filter users by their name or email
+        OR: [
+          { name: { contains: q, mode: 'insensitive' } },
+          { email: { contains: q, mode: 'insensitive' } },
+        ],
+      },
+    });
   }
 
   async suspendUser(id: string) {

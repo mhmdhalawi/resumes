@@ -6,6 +6,7 @@ import { UpdateResumeDto } from './dto/update-resume.dto';
 interface Request {
   userId?: string;
   is_admin?: boolean;
+  q?: string;
 }
 
 interface CreateResume extends Request {
@@ -66,11 +67,76 @@ export class ResumeService {
     });
   }
 
-  async findAll({ userId, is_admin = false }: Request) {
+  async findAll({ userId, q, is_admin = false }: Request) {
     const whereClause = is_admin ? {} : { userId };
 
     return await this.prismaService.resume.findMany({
-      where: whereClause,
+      where: {
+        ...whereClause,
+        OR: [
+          {
+            name: { contains: q, mode: 'insensitive' },
+          },
+          { address: { contains: q, mode: 'insensitive' } },
+          {
+            educations: {
+              some: {
+                OR: [
+                  {
+                    school: {
+                      contains: q,
+                      mode: 'insensitive',
+                    },
+                  },
+                  {
+                    degree: {
+                      contains: q,
+                      mode: 'insensitive',
+                    },
+                  },
+                  {
+                    field_of_study: {
+                      contains: q,
+                      mode: 'insensitive',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+          {
+            experiences: {
+              some: {
+                OR: [
+                  {
+                    company: {
+                      contains: q,
+                      mode: 'insensitive',
+                    },
+                  },
+                  {
+                    position: {
+                      contains: q,
+                      mode: 'insensitive',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+          {
+            skills: {
+              some: {
+                OR: [
+                  {
+                    name: { contains: q, mode: 'insensitive' },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
       include: this.includeRelations,
     });
   }

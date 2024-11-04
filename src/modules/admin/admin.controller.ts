@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
 import { Admin } from './guards/admin.guard';
 import { IDUserDto } from './dto/suspend-user.dto';
 import { AdminService } from './admin.service';
@@ -8,8 +8,8 @@ import { AdminService } from './admin.service';
 export class AdminController {
   constructor(private adminService: AdminService) {}
   @Get('users')
-  async getUsers() {
-    return await this.adminService.getUsers();
+  async getUsers(@Query('q') query: string) {
+    return await this.adminService.getUsers(query);
   }
 
   @Post('suspend')

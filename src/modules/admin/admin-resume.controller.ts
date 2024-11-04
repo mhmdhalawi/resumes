@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { UUIDPipe } from 'src/pipes/uuid.pipe';
 import { ResumeService } from '../resume/resume.service';
@@ -27,9 +28,10 @@ export class AdminResumeController {
   }
 
   @Get()
-  findAll() {
+  findAll(@Query('q') query: string) {
     return this.resumeService.findAll({
       is_admin: true,
+      q: query,
     });
   }
 
