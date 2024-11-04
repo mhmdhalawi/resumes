@@ -29,4 +29,9 @@ export class AdminController {
     await this.adminService.deleteUser(body.id);
     return { message: 'User deleted' };
   }
+
+  @Get('statistics')
+  async getStatistics() {
+    return await this.adminService.getStatistics();
+  }
 }

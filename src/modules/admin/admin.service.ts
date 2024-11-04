@@ -5,7 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 export class AdminService {
   constructor(private prismaService: PrismaService) {}
 
-  async getUsers(q?: string) {
+  async getUsers(q = '') {
     // Get all users
     return await this.prismaService.user.findMany({
       where: {
@@ -39,5 +39,21 @@ export class AdminService {
     await this.prismaService.user.delete({
       where: { id },
     });
+  }
+
+  async getStatistics() {
+    const [total_users, active_users, suspended_users, resumes] =
+      await this.prismaService.$transaction([
+        this.prismaService.user.count(),
+        this.prismaService.user.count({
+          where: { status: 'ACTIVE' },
+        }),
+        this.prismaService.user.count({
+          where: { status: 'SUSPENDED' },
+        }),
+        this.prismaService.resume.count(),
+      ]);
+
+    return { total_users, active_users, suspended_users, resumes };
   }
 }
