@@ -110,7 +110,7 @@ export class ResumeService {
         email: body?.email,
         phone: body?.phone,
         educations: {
-          updateMany: body?.educations?.map((education) => ({
+          update: body?.educations?.map((education) => ({
             where: { id: education?.id },
             data: education,
           })),
