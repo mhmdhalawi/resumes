@@ -7,16 +7,22 @@ import {
   Param,
   Delete,
   Session,
+  Res,
 } from '@nestjs/common';
 import { ResumeService } from './resume.service';
 import { UserSession } from '../auth/types/session';
 import { UUIDPipe } from 'src/pipes/uuid.pipe';
 import { CreateResumeDto } from './dto/create-resume.dto';
 import { UpdateResumeDto } from './dto/update-resume.dto';
+import { PdfService } from './pdf.service';
+import { Response } from 'express';
 
 @Controller('resume')
 export class ResumeController {
-  constructor(private readonly resumeService: ResumeService) {}
+  constructor(
+    private readonly resumeService: ResumeService,
+    private readonly pdfService: PdfService,
+  ) {}
 
   @Post()
   create(
@@ -71,5 +77,30 @@ export class ResumeController {
       id,
     });
     return { message: 'Resume deleted successfully' };
+  }
+
+  @Get(':id/pdf')
+  async downloadResumeAsPdf(
+    @Session() session: UserSession,
+    @Param('id') id: string,
+    @Res() res: Response,
+  ) {
+    // Fetch resume data from the database
+    const resume = await this.resumeService.findOne({
+      userId: session.user.id,
+      id,
+    });
+
+    // Generate PDF
+    const pdfBuffer = await this.pdfService.generateResumePdf(resume);
+
+    // Set response headers to trigger download
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename=resume-${resume.name}.pdf`,
+      'Content-Length': pdfBuffer.length,
+    });
+
+    return res.send(pdfBuffer);
   }
 }
