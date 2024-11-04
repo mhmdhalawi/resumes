@@ -2,10 +2,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateResumeDto } from './dto/create-resume.dto';
 import { UpdateResumeDto } from './dto/update-resume.dto';
+import { Prisma } from '@prisma/client';
 
 interface Request {
   userId?: string;
   is_admin?: boolean;
+}
+
+interface FindManyResume extends Request, Prisma.ResumeFindManyArgs {
   q?: string;
 }
 
@@ -67,10 +71,10 @@ export class ResumeService {
     });
   }
 
-  async findAll({ userId, q, is_admin = false }: Request) {
+  async findAll({ userId, q = '', is_admin = false, ...rest }: FindManyResume) {
     const whereClause = is_admin ? {} : { userId };
 
-    return await this.prismaService.resume.findMany({
+    const query: Prisma.ResumeFindManyArgs = {
       where: {
         ...whereClause,
         OR: [
@@ -138,7 +142,15 @@ export class ResumeService {
         ],
       },
       include: this.includeRelations,
-    });
+      ...rest,
+    };
+
+    const [resumes, count] = await this.prismaService.$transaction([
+      this.prismaService.resume.findMany(query),
+      this.prismaService.resume.count({ where: query.where }),
+    ]);
+
+    return { resumes, count };
   }
 
   async findOne({ userId, id, is_admin = false }: FindOneResume) {

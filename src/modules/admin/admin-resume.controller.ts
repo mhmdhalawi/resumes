@@ -28,10 +28,19 @@ export class AdminResumeController {
   }
 
   @Get()
-  findAll(@Query('q') query: string) {
+  findAll(
+    @Query('q') query?: string,
+    @Query('limit') limit?: string,
+    @Query('offset') offset?: string,
+  ) {
     return this.resumeService.findAll({
       is_admin: true,
-      q: query,
+      skip: parseInt(offset) || 0,
+      take: parseInt(limit) || undefined,
+      orderBy: {
+        created_at: 'asc',
+      },
+      q: query || '',
     });
   }
 
