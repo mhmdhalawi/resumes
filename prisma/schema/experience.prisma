@@ -2,8 +2,8 @@ model Experience {
     id          Int      @id @default(autoincrement())
     company     String
     position    String
-    startYear   Int
-    endYear     Int
+    start_year  Int
+    end_year    Int?
     description String
     resume      Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
     resumeId    String   @db.Uuid

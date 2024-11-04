@@ -1,16 +1,17 @@
-import { Body, Controller, Delete, Post, Session } from '@nestjs/common';
+import { Body, Controller, Delete, Post, Req, Session } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { AuthService } from './auth.service';
-import { SessionUser } from './types/session';
+import { UserSession } from './types/session';
 import { Public } from 'src/decorators/public';
+import { Request } from 'express';
 
 @Public()
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
   @Post()
-  async login(@Session() session: SessionUser, @Body() user: LoginUserDto) {
+  async login(@Session() session: UserSession, @Body() user: LoginUserDto) {
     const foundUser = await this.authService.login(user);
     session.user = {
       id: foundUser.id,
@@ -26,8 +27,8 @@ export class AuthController {
   }
 
   @Delete()
-  logout(@Session() session: SessionUser) {
-    session.user = null; // Clear user session
+  logout(@Req() req: Request) {
+    req.session = null; // Clear user session
     return { message: 'Logged out successfully' };
   }
 }

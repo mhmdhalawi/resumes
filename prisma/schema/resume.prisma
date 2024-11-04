@@ -10,10 +10,10 @@ model Resume {
     updated_at       DateTime       @updatedAt
     educations       Education[]
     experiences      Experience[]
+    projects         Projects[]
     skills           Skill[]
+    references       References[]
     affected_resumes ActivityLogs[] @relation("resume")
-    References       References[]
-    Projects         Projects[]
 
     @@map("resumes")
 }

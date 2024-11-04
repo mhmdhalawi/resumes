@@ -29,10 +29,4 @@ export class AdminController {
     await this.adminService.deleteUser(body.id);
     return { message: 'User deleted' };
   }
-
-  @Delete('delete-resume')
-  async deleteResume(@Body() body: IDUserDto) {
-    await this.adminService.deleteResume(body.id);
-    return { message: 'Resume deleted' };
-  }
 }

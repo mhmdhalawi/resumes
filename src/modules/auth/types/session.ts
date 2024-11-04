@@ -1,5 +1,5 @@
-export type SessionUser = {
+export interface UserSession {
   user: {
     id: string;
   };
-};
+}

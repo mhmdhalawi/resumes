@@ -1,14 +1,14 @@
 model Education {
-    id           Int      @id @default(autoincrement())
-    school       String
-    degree       String
-    fieldOfStudy String
-    startYear    Int
-    endYear      Int
-    resume       Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
-    resumeId     String   @db.Uuid
-    created_at   DateTime @default(now())
-    updated_at   DateTime @updatedAt
+    id             Int      @id @default(autoincrement())
+    school         String
+    degree         String
+    field_of_study String
+    start_year     Int
+    end_year       Int?
+    resume         Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+    resumeId       String   @db.Uuid
+    created_at     DateTime @default(now())
+    updated_at     DateTime @updatedAt
 
     @@map("educations")
 }

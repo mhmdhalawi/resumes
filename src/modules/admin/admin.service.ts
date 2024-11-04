@@ -32,11 +32,4 @@ export class AdminService {
       where: { id },
     });
   }
-
-  async deleteResume(id: string) {
-    // Delete the resume with the given ID
-    await this.prismaService.resume.delete({
-      where: { id },
-    });
-  }
 }

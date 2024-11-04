@@ -1,5 +1,5 @@
 model Projects {
-    id          String   @id @default(uuid()) @db.Uuid
+    id          Int      @id @default(autoincrement())
     name        String
     description String
     resume      Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
