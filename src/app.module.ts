@@ -9,6 +9,7 @@ import { ResumeModule } from './modules/resume/resume.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './modules/auth/guards/auth.guard';
+import { MediaModule } from './modules/media/media.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AuthGuard } from './modules/auth/guards/auth.guard';
     AuthModule,
     ResumeModule,
     PrismaModule,
+    MediaModule,
   ],
   controllers: [AppController],
   providers: [

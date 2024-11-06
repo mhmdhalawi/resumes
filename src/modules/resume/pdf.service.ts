@@ -2,9 +2,12 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { MediaService } from '../media/media.service';
+import { readFileSync } from 'fs';
 
 @Injectable()
 export class PdfService {
+  constructor(private mediaService: MediaService) {}
   async generateResumePdf(data: any): Promise<Buffer> {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([800, 1400]);
@@ -12,11 +15,25 @@ export class PdfService {
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
     let y = height - 50;
+    // fetch image from media service
+    if (data.photo) {
+      const filePath = this.mediaService.getFilePath(data.photo);
+      const imageBytes = readFileSync(filePath);
+      const image = await pdfDoc.embedJpg(imageBytes); // or embedPng for PNG images
+      y -= 200; // Adjust spacing between entries
+      page.drawImage(image, {
+        x: 50,
+        y: y, // Position the image at the top
+        width: 200,
+        height: 200,
+      });
+      y -= 50; // Adjust spacing between entries
+    }
 
     // Example content
     page.drawText(`Name: ${data.name}`, {
       x: 50,
-      y: y,
+      y,
       size: 20,
       font,
       color: rgb(0, 0, 0),

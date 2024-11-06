@@ -4,6 +4,7 @@ model Resume {
     address          String
     email            String
     phone            String
+    photo            String?
     user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId           String         @db.Uuid
     created_at       DateTime       @default(now())
