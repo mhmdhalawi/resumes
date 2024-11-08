@@ -13,9 +13,9 @@ import { UUIDPipe } from 'src/pipes/uuid.pipe';
 import { ResumeService } from '../resume/resume.service';
 import { CreateResumeDto } from '../resume/dto/create-resume.dto';
 import { UpdateResumeDto } from '../resume/dto/update-resume.dto';
-import { Admin } from './guards/admin.guard';
 import { Response } from 'express';
 import { PdfService } from '../resume/pdf.service';
+import { Admin } from '../admin/guards/admin.guard';
 
 @Admin()
 @Controller('admin/resume')
