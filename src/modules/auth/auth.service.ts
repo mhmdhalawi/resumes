@@ -143,24 +143,32 @@ export class AuthService {
   }
 
   async verifyEmail(token: string) {
-    const user = await this.prisma.token.findUnique({
+    // find user query
+    const userQuery: Prisma.TokenFindUniqueArgs = {
       where: {
         token,
       },
-    });
+    };
+
+    const user = await this.prisma.token.findUnique(userQuery);
 
     if (!user) {
       throw new UnauthorizedException('Invalid email verification link');
     }
 
-    await this.prisma.user.update({
+    const updateStatusQuery: Prisma.UserUpdateArgs = {
       where: {
         email: user.email,
       },
       data: {
         status: 'ACTIVE',
       },
-    });
+    };
+
+    await this.prisma.$transaction([
+      this.prisma.user.update(updateStatusQuery),
+      this.prisma.token.delete(userQuery),
+    ]);
 
     return { message: 'Email verified successfully' };
   }
