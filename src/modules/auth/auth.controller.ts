@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Post, Req, Session } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Query,
+  Req,
+  Session,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { AuthService } from './auth.service';
@@ -30,5 +39,28 @@ export class AuthController {
   logout(@Req() req: Request) {
     req.session = null; // Clear user session
     return { message: 'Logged out successfully' };
+  }
+
+  @Post('forgot-password')
+  async forgotPassword(@Body() user: { email: string }) {
+    return this.authService.registerToken(user.email);
+  }
+
+  @Post('reset-password')
+  async resetPassword(
+    @Query('token') token: string,
+    @Body() user: { password: string },
+  ) {
+    return this.authService.resetPassword(token, user.password);
+  }
+
+  @Post('send-email-verification')
+  async sendEmailVerification(@Body() user: { email: string }) {
+    return this.authService.registerToken(user.email);
+  }
+
+  @Get('verify-email')
+  async verifyEmail(@Query('token') token: string) {
+    return this.authService.verifyEmail(token);
   }
 }

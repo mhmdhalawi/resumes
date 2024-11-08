@@ -1,0 +1,10 @@
+model Token {
+    id         String   @id @default(cuid())
+    token      String   @unique
+    email      String   @unique
+    expires_at DateTime
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+
+    @@map("tokens")
+}
