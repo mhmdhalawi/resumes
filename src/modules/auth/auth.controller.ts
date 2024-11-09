@@ -14,11 +14,15 @@ import { AuthService } from './auth.service';
 import { UserSession } from './types/session';
 import { Public } from 'src/decorators/public';
 import { Request } from 'express';
+import { PostMarkService } from '../postmark/postmark.service';
 
 @Public()
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private postmarkService: PostMarkService,
+  ) {}
   @Post()
   async login(@Session() session: UserSession, @Body() user: LoginUserDto) {
     const foundUser = await this.authService.login(user);
@@ -31,8 +35,15 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() user: CreateUserDto) {
-    await this.authService.register(user);
-    return { message: 'User created successfully' };
+    try {
+      await Promise.all([
+        this.authService.register(user),
+        this.authService.registerToken(user.email),
+      ]);
+      return { message: 'User created successfully' };
+    } catch (error) {
+      throw new Error('Error during user registration: ' + error.message);
+    }
   }
 
   @Delete()
@@ -43,7 +54,14 @@ export class AuthController {
 
   @Post('forgot-password')
   async forgotPassword(@Body() user: { email: string }) {
-    return this.authService.registerToken(user.email);
+    const token = await this.authService.registerToken(user.email);
+
+    await this.postmarkService.sendEmailWithTemplate(user.email, 37950348, {
+      product_name: user.email,
+      action_url: `http://localhost:3000/auth/reset-password?token=${token}`,
+    });
+
+    return { message: 'Email sent successfully' };
   }
 
   @Post('reset-password')
@@ -56,7 +74,20 @@ export class AuthController {
 
   @Post('send-email-verification')
   async sendEmailVerification(@Body() user: { email: string }) {
-    return this.authService.registerToken(user.email);
+    const token = await this.authService.registerToken(user.email);
+
+    // await this.postmarkService.sendEmail(
+    //   user.email,
+    //   'Verify your email',
+    //   `Click on the following link to verify your email: http://localhost:3000/auth/verify-email?token=${token}`,
+    // );
+
+    await this.postmarkService.sendEmailWithTemplate(user.email, 37950349, {
+      email: user.email,
+      action_url: `http://localhost:3000/auth/verify-email?token=${token}`,
+    });
+
+    return { message: 'Email sent successfully' };
   }
 
   @Get('verify-email')

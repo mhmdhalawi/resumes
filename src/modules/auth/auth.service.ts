@@ -59,7 +59,6 @@ export class AuthService {
         password: hashedPassword,
       },
     });
-    await this.registerToken(user.email);
   }
 
   private generateTokenAndExpiresAt() {
@@ -102,7 +101,7 @@ export class AuthService {
     }
 
     // Send email with reset password link
-    return { message: 'Email verification link sent to your email' };
+    return token;
   }
 
   async resetPassword(token: string, password: string) {

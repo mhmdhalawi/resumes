@@ -10,6 +10,7 @@ import { PrismaModule } from './modules/prisma/prisma.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './modules/auth/guards/auth.guard';
 import { MediaModule } from './modules/media/media.module';
+import { PostMarkModule } from './modules/postmark/postmark.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { MediaModule } from './modules/media/media.module';
     ResumeModule,
     PrismaModule,
     MediaModule,
+    PostMarkModule,
   ],
   controllers: [AppController],
   providers: [
