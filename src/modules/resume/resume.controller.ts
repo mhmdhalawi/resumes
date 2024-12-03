@@ -8,6 +8,7 @@ import {
   Delete,
   Session,
   Res,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ResumeService } from './resume.service';
 import { UserSession } from '../auth/types/session';
@@ -16,8 +17,10 @@ import { CreateResumeDto } from './dto/create-resume.dto';
 import { UpdateResumeDto } from './dto/update-resume.dto';
 import { PdfService } from './pdf.service';
 import { Response } from 'express';
+import { ActivityLogInterceptor } from 'src/interceptors/activity-logs.interceptors';
 
 @Controller('resume')
+@UseInterceptors(ActivityLogInterceptor)
 export class ResumeController {
   constructor(
     private readonly resumeService: ResumeService,

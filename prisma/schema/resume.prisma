@@ -1,20 +1,19 @@
 model Resume {
-    id               String         @id @default(uuid()) @db.Uuid
-    name             String
-    address          String
-    email            String
-    phone            String
-    photo            String?
-    user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId           String         @db.Uuid
-    created_at       DateTime       @default(now())
-    updated_at       DateTime       @updatedAt
-    educations       Education[]
-    experiences      Experience[]
-    projects         Projects[]
-    skills           Skill[]
-    references       References[]
-    affected_resumes ActivityLogs[] @relation("resume")
+    id          String       @id @default(uuid()) @db.Uuid
+    name        String
+    address     String
+    email       String
+    phone       String
+    photo       String?
+    user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId      String       @db.Uuid
+    created_at  DateTime     @default(now())
+    updated_at  DateTime     @updatedAt
+    educations  Education[]
+    experiences Experience[]
+    projects    Projects[]
+    skills      Skill[]
+    references  References[]
 
     @@map("resumes")
 }

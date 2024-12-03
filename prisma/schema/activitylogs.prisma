@@ -1,14 +1,13 @@
 model ActivityLogs {
-    admin           User     @relation(name: "admin", fields: [adminId], references: [id], onDelete: Cascade, map: "admin")
-    adminId         String   @db.Uuid
+    id              Int    @id @default(autoincrement())
+    user            User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId          String @db.Uuid
     action          Action
     affected_entity Entity
-    user            User?    @relation(name: "user", fields: [affected_id], references: [id], onDelete: Cascade, map: "userId")
-    resume          Resume?  @relation(name: "resume", fields: [affected_id], references: [id], onDelete: Cascade, map: "resumeId")
-    affected_id     String   @db.Uuid
-    created_at      DateTime @default(now())
 
-    @@id([adminId, affected_id])
+    affected_id String   @db.Uuid
+    created_at  DateTime @default(now())
+
     @@map("activity_logs")
 }
 
@@ -16,6 +15,8 @@ enum Action {
     SUSPEND
     ACTIVATE
     DELETE
+    UPDATE
+    CREATE
 }
 
 enum Entity {

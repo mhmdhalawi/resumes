@@ -20,7 +20,7 @@ export class AdminService {
 
   async suspendUser(id: string) {
     // Suspend the user with the given ID
-    await this.prismaService.user.update({
+    return await this.prismaService.user.update({
       where: { id },
       data: { status: 'SUSPENDED' },
     });

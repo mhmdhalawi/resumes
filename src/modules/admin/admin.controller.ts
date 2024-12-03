@@ -1,10 +1,20 @@
-import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Query,
+  UseInterceptors,
+} from '@nestjs/common';
 import { Admin } from './guards/admin.guard';
 import { IDUserDto } from './dto/suspend-user.dto';
 import { AdminService } from './admin.service';
+import { ActivityLogInterceptor } from 'src/interceptors/activity-logs.interceptors';
 
 @Admin()
 @Controller('admin')
+@UseInterceptors(ActivityLogInterceptor)
 export class AdminController {
   constructor(private adminService: AdminService) {}
   @Get('users')
@@ -12,10 +22,10 @@ export class AdminController {
     return await this.adminService.getUsers(query);
   }
 
-  @Post('suspend')
+  @Post('user/suspend')
   async suspendUser(@Body() body: IDUserDto) {
-    await this.adminService.suspendUser(body.id);
-    return { message: 'User suspended' };
+    const user = await this.adminService.suspendUser(body.id);
+    return { message: 'User suspended', id: user.id };
   }
 
   @Post('activate')

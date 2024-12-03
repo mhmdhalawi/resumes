@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   Res,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UUIDPipe } from 'src/pipes/uuid.pipe';
 import { ResumeService } from '../resume/resume.service';
@@ -16,9 +17,11 @@ import { UpdateResumeDto } from '../resume/dto/update-resume.dto';
 import { Response } from 'express';
 import { PdfService } from '../resume/pdf.service';
 import { Admin } from '../admin/guards/admin.guard';
+import { ActivityLogInterceptor } from 'src/interceptors/activity-logs.interceptors';
 
 @Admin()
 @Controller('admin/resume')
+@UseInterceptors(ActivityLogInterceptor)
 export class AdminResumeController {
   constructor(
     private readonly resumeService: ResumeService,
